@@ -4,6 +4,21 @@ Gymtracker is designed to streamline the process of manually tracking gym workou
 detailed training sessions. It ensures consistency and accuracy by preventing duplicate exercise entries and propagating edits to historical records. 
 Built with .NET MVC and secured with JWT authentication, Gymtracker provides a scalable and user-friendly platform for managing workout history.
 
+## Tech Stack
+- .net 8
+- asp.net core
+- razor pages
+- c#
+- jwt
+
+## Project Structure
+- src - main source code
+  - GymTracker
+	- Controllers - API controllers for handling requests
+	- Models - Data models representing the application's entities
+	- Views - Razor views for rendering HTML
+	- wwwroot - Static files (CSS, JS, images)
+
 ## BACKEND
 
 ### Guidelines for DOTNET

@@ -13,6 +13,7 @@
   <ItemGroup>
     <None Include=".ai\prd.md" />
     <None Include=".ai\tech-stack.md" />
+    <None Include=".github\copilot-instructions.md" />
   </ItemGroup>
 
 </Project>
