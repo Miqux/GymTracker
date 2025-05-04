@@ -7,11 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Models\DTO\" />
     <Folder Include="Prompt\" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include=".ai\api-plan.md" />
     <None Include=".ai\db-plan.md" />
+    <None Include=".ai\endpoints\register-implementation-plan.md" />
     <None Include=".ai\prd.md" />
     <None Include=".ai\tech-stack.md" />
     <None Include=".github\copilot-instructions.md" />
