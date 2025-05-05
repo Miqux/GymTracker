@@ -53,7 +53,6 @@ namespace GymTracker.Controllers
             }
 
             // W przypadku sukcesu ustawiamy token i przekierowujemy u¿ytkownika np. do strony g³ównej
-            TempData["Token"] = result.Token;
             TempData["SuccessMessage"] = "Login successful.";
 
             return RedirectToAction("Index", "Home");

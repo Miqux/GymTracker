@@ -41,18 +41,6 @@ Built with .NET MVC and secured with JWT authentication, Gymtracker provides a s
 - Implement proper exception handling with ExceptionFilter or middleware to provide consistent error responses
 - Use dependency injection with scoped lifetime for request-specific services and singleton for stateless services
 
-
-## DATABASE
-
-### Guidelines for SQL
-
-#### MYSQL
-
-- Use InnoDB storage engine for transactions and foreign key constraints
-- Implement proper indexing strategies based on {{query_patterns}}
-- Use connection pooling for better performance
-
-
 ## DEVOPS
 
 ### Guidelines for CI_CD

@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using GymTracker.Models;
 using GymTracker.Models.Command;
+using GymTracker.Models.DTO;
 
 namespace GymTracker.Services
 {

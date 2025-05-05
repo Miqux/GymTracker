@@ -8,6 +8,12 @@ using System.Security.Cryptography;
 using System.Text;
 using GymTracker.Data.Models;
 using GymTracker.Models.Command;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using GymTracker.Models.DTO;
 
 namespace GymTracker.Services
 {
@@ -15,11 +21,15 @@ namespace GymTracker.Services
     {
         private readonly GymTrackerContext _context;
         private readonly ILogger<AccountService> _logger;
+        private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AccountService(GymTrackerContext context, ILogger<AccountService> logger)
+        public AccountService(GymTrackerContext context, ILogger<AccountService> logger, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _logger = logger;
+            _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<RegisterResult> RegisterUserAsync(RegisterUserCommand command)
@@ -69,7 +79,6 @@ namespace GymTracker.Services
         {
             try
             {
-                // Wyszukiwanie u¿ytkownika po emailu
                 var user = await _context.Users
                     .FirstOrDefaultAsync(u => u.Email.ToLower() == command.Email.ToLower());
 
@@ -78,17 +87,25 @@ namespace GymTracker.Services
                     return new LoginResult { Success = false, ErrorMessage = "Nieprawid³owy email lub has³o." };
                 }
 
-                // Porównanie zahashowanego has³a
                 var attemptedHash = HashPassword(command.Password);
                 if (user.PasswordHash != attemptedHash)
                 {
                     return new LoginResult { Success = false, ErrorMessage = "Nieprawid³owy email lub has³o." };
                 }
 
-                // Generowanie tokenu JWT (tymczasowa implementacja – do zast¹pienia konfiguracj¹ JWT)
-                var token = "dummy-jwt-token";
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.Email),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                };
+                var identity = new ClaimsIdentity(claims, "login");
+                var principal = new ClaimsPrincipal(identity);
 
-                return new LoginResult { Success = true, Token = token };
+                // Logowanie u¿ytkownika przy u¿yciu mechanizmu Cookie Authentication
+                await _httpContextAccessor.HttpContext.SignInAsync("Cookies", principal);
+
+                // W tym scenariuszu metoda zwraca true (poprawne logowanie)
+                return new LoginResult { Success = true };
             }
             catch (Exception ex)
             {

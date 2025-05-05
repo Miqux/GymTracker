@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\DTO\" />
-    <Folder Include="Prompt\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include=".ai\api-plan.md" />
     <None Include=".ai\db-plan.md" />
     <None Include=".ai\endpoints\login-implementation-plan.md" />
@@ -23,6 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
       <PrivateAssets>all</PrivateAssets>

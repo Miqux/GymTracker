@@ -10,13 +10,6 @@
     <div class="alert alert-success">@TempData["SuccessMessage"]</div>
 }
 
-@if (TempData["Token"] != null)
-{
-    <div class="alert alert-info">
-        <strong>Token:</strong> @TempData["Token"]
-    </div>
-}
-
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 <form asp-action="Login" method="post">

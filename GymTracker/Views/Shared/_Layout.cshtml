@@ -17,23 +17,26 @@
                 <span class="navbar-text">
                     Gym Tracker to aplikacja webowa upraszczająca rejestrowanie postępów w treningach.
                 </span>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <!-- Lewa część: tylko link do strony głównej -->
                     <ul class="navbar-nav flex-grow-1">
                     </ul>
-                    <!-- Prawa część: logowanie i rejestracja -->
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="/Account/Login">Logowanie</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="/Account/Register">Rejestracja</a>
-                        </li>
-                    </ul>
+                    <!-- Prawa część: warunkowe przyciski logowania/rejestracji -->
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/Account/Login">Logowanie</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/Account/Register">Rejestracja</a>
+                            </li>
+                        </ul>
+                    }
                 </div>
             </div>
         </nav>

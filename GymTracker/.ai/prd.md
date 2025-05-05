@@ -2,7 +2,7 @@
 
 ## 1. Przegl¹d produktu
 Gym Tracker to aplikacja webowa maj¹ca na celu uproszczenie i usystematyzowanie rejestrowania postêpów w treningach. Aplikacja umo¿liwia u¿ytkownikom:
-- Rejestracjê i logowanie przy u¿yciu mechanizmu JWT.
+- Rejestracjê i logowanie.
 - Dodawanie, edycjê oraz blokowanie æwiczeñ.
 - Tworzenie treningów, które sk³adaj¹ siê z daty oraz listy æwiczeñ, zawieraj¹cych informacje o liczbie serii, powtórzeñ i opcjonalnie ciê¿arze.
 - Przegl¹danie historii treningowej w trybie tylko do odczytu.
@@ -11,7 +11,7 @@ Gym Tracker to aplikacja webowa maj¹ca na celu uproszczenie i usystematyzowanie 
 U¿ytkownicy obecnie musz¹ rêcznie zapisywaæ postêpy na si³owni, co jest czasoch³onne i czêsto nieprzejrzyste. Brak przejrzystoœci oraz z³o¿onoœæ manualnego zapisywania treningów powoduj¹, ¿e wielu u¿ytkowników rezygnuje z regularnego prowadzenia notatek treningowych.
 
 ## 3. Wymagania funkcjonalne
-- U¿ytkownik musi mieæ mo¿liwoœæ rejestracji oraz logowania przy u¿yciu JWT.
+- U¿ytkownik musi mieæ mo¿liwoœæ rejestracji oraz logowania.
 - Dodawanie æwiczeñ z wymagan¹ walidacj¹:
   - Nazwy æwiczeñ musz¹ byæ unikalne w obrêbie jednego u¿ytkownika.
   - Nazwa æwiczenia musi mieæ d³ugoœæ od 3 do 150 znaków.
@@ -39,7 +39,7 @@ Opis: Jako nowy u¿ytkownik, chcê móc siê zarejestrowaæ, aby uzyskaæ dostêp do ap
 Kryteria akceptacji:
 - U¿ytkownik wprowadza wymagane dane (email, has³o).
 - System weryfikuje poprawnoœæ danych.
-- Po pomyœlnej rejestracji u¿ytkownik otrzymuje token JWT.
+- Po pomyœlnej rejestracji u¿ytkownik zostaje uwierzytelniony.
 
 ### US-002
 ID: US-002  
@@ -48,7 +48,7 @@ Opis: Jako zarejestrowany u¿ytkownik, chcê móc siê zalogowaæ, aby móc korzystaæ 
 Kryteria akceptacji:
 - U¿ytkownik wprowadza poprawne dane logowania.
 - System potwierdza autentycznoœæ danych.
-- Po pomyœlnym logowaniu u¿ytkownik otrzymuje token JWT.
+- Po pomyœlnym logowaniu u¿ytkownik zostaje uwierzytelniony.
 
 ### US-003
 ID: US-003  
@@ -96,18 +96,9 @@ Kryteria akceptacji:
 - Ka¿dy trening zawiera datê oraz szczegó³ow¹ listê æwiczeñ z odpowiednimi danymi.
 - Historia jest widoczna tylko do odczytu.
 
-### US-008
-ID: US-008  
-Tytu³: Bezpieczny dostêp do aplikacji  
-Opis: Jako u¿ytkownik, chcê, aby dostêp do aplikacji by³ zabezpieczony mechanizmem JWT, aby moje dane by³y chronione i tylko autoryzowani u¿ytkownicy mieli dostêp do funkcjonalnoœci.  
-Kryteria akceptacji:
-- Ka¿de ¿¹danie do funkcjonalnoœci wymagaj¹cych autoryzacji wymaga wa¿nego tokena JWT.
-- ¯¹dania bez poprawnego tokena s¹ odrzucane.
-- System zapewnia, ¿e tylko zalogowani u¿ytkownicy mog¹ korzystaæ z chronionych zasobów.
-
 ## 6. Metryki sukcesu
 - U¿ytkownik mo¿e dodaæ æwiczenie spe³niaj¹ce kryteria unikalnoœci i d³ugoœci nazwy.
-- U¿ytkownik mo¿e z powodzeniem zarejestrowaæ siê i zalogowaæ, otrzymuj¹c token JWT.
+- U¿ytkownik mo¿e z powodzeniem zarejestrowaæ siê i zalogowaæ.
 - Proces dodawania, edycji i blokowania æwiczeñ odbywa siê bez b³êdów, a zmiany w edycji s¹ propagowane do historycznych rekordów.
 - U¿ytkownik mo¿e utworzyæ trening, który poprawnie zapisuje datê oraz szczegó³y æwiczeñ.
 - Historia treningów jest wyœwietlana w sposób czytelny i tylko do odczytu.
