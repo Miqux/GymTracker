@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using GymTracker.Models;
 using GymTracker.Services;
+using GymTracker.Models.Command;
+using GymTracker.Models.DTO;
 
 namespace GymTracker.Controllers
 {
@@ -16,6 +18,45 @@ namespace GymTracker.Controllers
         {
             _accountService = accountService;
             _logger = logger;
+        }
+
+        // GET: /Account/Login
+        [HttpGet("/Account/Login")]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        // POST: /Account/Login
+        [HttpPost("/Account/Login")]
+        public async Task<IActionResult> Login(LoginRequestDto loginDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Zwracamy widok z b³êdami walidacji
+                return View(loginDto);
+            }
+
+            // Mapowanie DTO na Command Model
+            var command = new LoginCommand
+            {
+                Email = loginDto.Email,
+                Password = loginDto.Password
+            };
+
+            // Wywo³anie logiki logowania
+            var result = await _accountService.LoginUserAsync(command);
+            if (!result.Success)
+            {
+                ModelState.AddModelError("", result.ErrorMessage);
+                return View(loginDto);
+            }
+
+            // W przypadku sukcesu ustawiamy token i przekierowujemy u¿ytkownika np. do strony g³ównej
+            TempData["Token"] = result.Token;
+            TempData["SuccessMessage"] = "Login successful.";
+
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: /Account/Register

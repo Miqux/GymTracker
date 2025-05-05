@@ -7,6 +7,7 @@ using GymTracker.Models;
 using System.Security.Cryptography;
 using System.Text;
 using GymTracker.Data.Models;
+using GymTracker.Models.Command;
 
 namespace GymTracker.Services
 {
@@ -62,6 +63,37 @@ namespace GymTracker.Services
                     Success = false,
                     ErrorMessage = "Wyst¹pi³ b³¹d podczas rejestracji."
                 };
+            }
+        }
+        public async Task<LoginResult> LoginUserAsync(LoginCommand command)
+        {
+            try
+            {
+                // Wyszukiwanie u¿ytkownika po emailu
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Email.ToLower() == command.Email.ToLower());
+
+                if (user == null)
+                {
+                    return new LoginResult { Success = false, ErrorMessage = "Nieprawid³owy email lub has³o." };
+                }
+
+                // Porównanie zahashowanego has³a
+                var attemptedHash = HashPassword(command.Password);
+                if (user.PasswordHash != attemptedHash)
+                {
+                    return new LoginResult { Success = false, ErrorMessage = "Nieprawid³owy email lub has³o." };
+                }
+
+                // Generowanie tokenu JWT (tymczasowa implementacja – do zast¹pienia konfiguracj¹ JWT)
+                var token = "dummy-jwt-token";
+
+                return new LoginResult { Success = true, Token = token };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during user login");
+                return new LoginResult { Success = false, ErrorMessage = "Wyst¹pi³ b³¹d podczas logowania." };
             }
         }
 

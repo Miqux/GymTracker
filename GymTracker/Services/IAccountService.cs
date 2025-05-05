@@ -1,11 +1,13 @@
 using System.Threading.Tasks;
 using GymTracker.Models;
+using GymTracker.Models.Command;
 
 namespace GymTracker.Services
 {
     public interface IAccountService
     {
         Task<RegisterResult> RegisterUserAsync(RegisterUserCommand command);
+        Task<LoginResult> LoginUserAsync(LoginCommand command);
     }
 
     public class RegisterResult
