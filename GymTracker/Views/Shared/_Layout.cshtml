@@ -37,6 +37,17 @@
                             </li>
                         </ul>
                     }
+                    else
+                    {
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <form class="form-inline" method="post" asp-controller="Account" asp-action="Logout">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="nav-link btn btn-link text-dark" style="cursor:pointer;">Wyloguj</button>
+                                </form>
+                            </li>
+                        </ul>
+                    }
                 </div>
             </div>
         </nav>

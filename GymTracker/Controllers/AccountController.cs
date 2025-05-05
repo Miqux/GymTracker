@@ -6,6 +6,8 @@ using GymTracker.Models;
 using GymTracker.Services;
 using GymTracker.Models.Command;
 using GymTracker.Models.DTO;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GymTracker.Controllers
 {
@@ -24,6 +26,7 @@ namespace GymTracker.Controllers
         [HttpGet("/Account/Login")]
         public IActionResult Login()
         {
+            TempData.Remove("SuccessMessage");
             return View();
         }
 
@@ -52,8 +55,7 @@ namespace GymTracker.Controllers
                 return View(loginDto);
             }
 
-            // W przypadku sukcesu ustawiamy token i przekierowujemy u¿ytkownika np. do strony g³ównej
-            TempData["SuccessMessage"] = "Login successful.";
+            TempData["SuccessMessage"] = "Pomyœlnie zalogowano.";
 
             return RedirectToAction("Index", "Home");
         }
@@ -107,6 +109,15 @@ namespace GymTracker.Controllers
                 TempData["IsSuccess"] = false;
                 return View(registerDto);
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
