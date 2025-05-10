@@ -1,0 +1,49 @@
+﻿@model GymTracker.Models.DTO.WorkoutDetailsDTO
+@{
+    ViewData["Title"] = "Szczegóły treningu";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="card">
+    <div class="card-header">
+        Trening #@Model.Id - @Model.Date.ToString("yyyy-MM-dd")
+    </div>
+    <div class="card-body">
+        <p><strong>Notatki:</strong> @Model.Notes</p>
+        <h4>Ćwiczenia:</h4>
+        @if (Model.Exercises == null || !Model.Exercises.Any())
+        {
+            <p>Brak ćwiczeń w tym treningu.</p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nazwa ćwiczenia</th>
+                        <th>Serie</th>
+                        <th>Powtórzenia</th>
+                        <th>Ciężar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var exercise in Model.Exercises)
+                    {
+                        <tr>
+                            <td>@exercise.ExerciseName</td>
+                            <td>@exercise.Sets</td>
+                            <td>@exercise.Reps</td>
+                            <td>@(exercise.Weight.HasValue ? exercise.Weight.Value.ToString() : "N/A")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="History" class="btn btn-secondary">Powrót do historii</a>
+    <a asp-action="Create" class="btn btn-primary">Dodaj trening</a>
+</div>

@@ -1,0 +1,41 @@
+﻿@model List<GymTracker.Models.DTO.WorkoutHistoryDTO>
+@{
+    ViewData["Title"] = "Historia treningów";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">Brak treningów do wyświetlenia.</div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Data</th>
+                <th>Notatki</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var workout in Model)
+            {
+                <tr>
+                    <td>@workout.Id</td>
+                    <td>@workout.Date.ToString("yyyy-MM-dd")</td>
+                    <td>@workout.Notes</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@workout.Id" class="btn btn-info btn-sm">Szczegóły</a>
+                        <form asp-action="Delete" method="post" style="display:inline;" onsubmit="return confirm('Czy naprawdę usunąć trening?');">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@workout.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

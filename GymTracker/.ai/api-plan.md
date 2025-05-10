@@ -64,6 +64,16 @@
   - 200 OK – æwiczenie zablokowane
   - 400 Bad Request – problem z operacj¹
 
+#### 4. Wyœwietlanie æwiczeñ
+- **Metoda HTTP:** GET
+- **Œcie¿ka URL:** /Exercises
+- **Opis:** Wyœwietlanie æwiczeñ u¿ytkownika w formie listy. Umo¿liwia przejœæ do dodawania æwiczenia, edycji lub blokowania. Z tej listy mo¿na przejœæ do edycji, blokowania lub dodawania æwiczenia.
+- **£adunek ¿¹dania:** Brak
+- **£adunek odpowiedzi:** Widok.
+- **Kody powodzenia:**  
+  - 200 OK – Lista æwiczeñ zwrócona pomyœlnie
+  - 400 Bad Request – problem z operacj¹
+
 ### C. Treningi (Workouts)
 #### 1. Dodawanie treningu
 - **Metoda HTTP:** GET (formularz dodawania), POST (przyjmowanie danych)
@@ -89,6 +99,31 @@
 - **Kody powodzenia:**  
   - 200 OK – lista treningów zwrócona pomyœlnie
 
+#### 3. Usuwanie treningów
+- **Metoda HTTP:** DELETE
+- **Œcie¿ka URL:** /Workouts/Delete/{id}
+- **Opis:** Usuwa trening, dostêpne z listy treningów, dodatkowy przycisk "Usuñ" przy ka¿dym treningu.
+- **Parametry zapytania:**  
+  - id (int): id treningu do usuniêcia 
+- **£adunek odpowiedzi:**  
+  Komunikat o powodzeniu lub b³êdzie
+- **Kody powodzenia:**  
+  - 200 OK – trening usuniêty
+  - 400 Bad Request – problem z operacj¹
+
+
+ #### 4. Wyœwietlanie treningów
+- **Metoda HTTP:** GET
+- **Œcie¿ka URL:** /Workouts/{id}
+- **Opis:** Wyœwietla pe³ne informacje na temat wybranego treningu.
+- **Parametry zapytania:**  
+  - id (int): id treningu do wyœwietlenia
+- **£adunek odpowiedzi:**  
+  widok z informacjami o treningu
+- **Kody powodzenia:**  
+  - 200 OK – widok treningu zwrócony pomyœlnie
+  - 400 Bad Request – problem z operacj¹
+	
 ## 3. Uwierzytelnianie i autoryzacja
 - Mechanizm: Cookie Authentication (dla operacji zwracaj¹cych widoki)  
 - **Opis:** Wszystkie operacje modyfikuj¹ce dane (tworzenie, edycja, blokowanie) wymagaj¹ autoryzacji. U¿ytkownik musi byæ zalogowany, a sesja uwierzytelniona za pomoc¹ cookies. W przypadku wywo³añ API, zamiast JWT wykorzystuje siê standardowe mechanizmy autoryzacji ASP.NET Core ([Authorize]).

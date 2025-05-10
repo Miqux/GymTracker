@@ -20,6 +20,8 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddDbContext<GymTrackerContext>(options =>
    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IExerciseService, ExerciseService>();
+builder.Services.AddScoped<IWorkoutService, WorkoutService>();
 builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 

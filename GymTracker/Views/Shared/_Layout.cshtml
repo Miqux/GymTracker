@@ -41,6 +41,15 @@
                     {
                         <ul class="navbar-nav">
                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Exercises" asp-action="Index">Moje Ćwiczenia</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Workouts" asp-action="History">Treningi</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Workouts" asp-action="Create">Dodaj trening</a>
+                            </li>
+                            <li class="nav-item">
                                 <form class="form-inline" method="post" asp-controller="Account" asp-action="Logout">
                                     @Html.AntiForgeryToken()
                                     <button type="submit" class="nav-link btn btn-link text-dark" style="cursor:pointer;">Wyloguj</button>

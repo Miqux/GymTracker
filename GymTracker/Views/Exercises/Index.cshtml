@@ -1,0 +1,52 @@
+﻿@model List<GymTracker.Data.DTO.ExerciseListDTO>
+@{
+    ViewData["Title"] = "Moje Ćwiczenia";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-primary">Dodaj nowe ćwiczenie</a>
+</div>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">Nie znaleziono ćwiczeń.</div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nazwa</th>
+                <th>Grupa mięśniowa</th>
+                <th>Poziom trudności</th>
+                <th>Opis</th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var exercise in Model)
+            {
+                <tr>
+                    <td>@exercise.Name</td>
+                    <td>@exercise.MuscleGroup</td>
+                    <td>@exercise.DifficultyLevel</td>
+                    <td>@exercise.Description</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@exercise.Id" class="btn btn-link">Edytuj</a>
+                        <form asp-action="Block" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@exercise.Id" />
+                            <button type="submit" class="btn btn-link">Blokuj</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

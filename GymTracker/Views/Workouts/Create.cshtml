@@ -1,0 +1,106 @@
+﻿@model GymTracker.Models.Command.WorkoutCreateCommand
+@{
+    ViewData["Title"] = "Dodaj trening";
+    var availableExercises = ViewBag.AvailableExercises as List<GymTracker.Data.DTO.ExerciseListDTO>;
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="Date" class="control-label"></label>
+        <input asp-for="Date" type="date" class="form-control" />
+        <span asp-validation-for="Date" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Notes" class="control-label"></label>
+        <textarea asp-for="Notes" class="form-control"></textarea>
+        <span asp-validation-for="Notes" class="text-danger"></span>
+    </div>
+
+    <h4>Ćwiczenia</h4>
+    <table class="table" id="exercisesTable">
+        <thead>
+            <tr>
+                <th>Ćwiczenie</th>
+                <th>Serie</th>
+                <th>Powtórzenia</th>
+                <th>Ciężar</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="exerciseRow">
+                <td>
+                    <select name="Exercises[0].ExerciseId" class="form-control">
+                        <option value="">-- Wybierz ćwiczenie --</option>
+                        @if (availableExercises != null)
+                        {
+                            foreach (var exercise in availableExercises)
+                            {
+                                <option value="@exercise.Id">@exercise.Name</option>
+                            }
+                        }
+                    </select>
+                </td>
+                <td>
+                    <input type="number" name="Exercises[0].Sets" class="form-control" value="1" min="1" />
+                </td>
+                <td>
+                    <input type="number" name="Exercises[0].Reps" class="form-control" value="1" min="1" />
+                </td>
+                <td>
+                    <input type="number" step="0.1" name="Exercises[0].Weight" class="form-control" />
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger removeRow">Usuń</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button type="button" id="addExercise" class="btn btn-secondary">Dodaj kolejne ćwiczenie</button>
+
+    <div class="form-group mt-3">
+        <button type="submit" class="btn btn-primary">Zapisz trening</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Adding new exercise row
+        document.getElementById("addExercise").addEventListener("click", function () {
+            var tableBody = document.querySelector("#exercisesTable tbody");
+            var rows = tableBody.getElementsByClassName("exerciseRow");
+            var index = rows.length;
+            var newRow = rows[0].cloneNode(true);
+            newRow.querySelectorAll("select, input").forEach(function (input) {
+                var name = input.getAttribute("name");
+                input.setAttribute("name", name.replace(/\[\d+\]/, "[" + index + "]"));
+                if (input.tagName.toLowerCase() === "input") {
+                    if (input.type === "number") {
+                        input.value = "1";
+                    }
+                }
+                if (input.tagName.toLowerCase() === "select") {
+                    input.selectedIndex = 0;
+                }
+            });
+            tableBody.appendChild(newRow);
+        });
+
+        // Removing exercise row
+        document.querySelector("#exercisesTable").addEventListener("click", function(e) {
+            if (e.target && e.target.matches("button.removeRow")) {
+                var rows = document.querySelectorAll("#exercisesTable tbody tr.exerciseRow");
+                if (rows.length > 1) {
+                    e.target.closest("tr").remove();
+                }
+            }
+        });
+    </script>
+}

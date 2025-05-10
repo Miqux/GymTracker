@@ -9,8 +9,16 @@
   <ItemGroup>
     <None Include=".ai\api-plan.md" />
     <None Include=".ai\db-plan.md" />
+    <None Include=".ai\endpoints\exercises-list-implementation-plan.md" />
+    <None Include=".ai\endpoints\exercises-edit-implementation-plan.md" />
+    <None Include=".ai\endpoints\exercises-block-implementation-plan.md" />
+    <None Include=".ai\endpoints\exercises-create-implementation-plan.md" />
     <None Include=".ai\endpoints\login-implementation-plan.md" />
     <None Include=".ai\endpoints\register-implementation-plan.md" />
+    <None Include=".ai\endpoints\workouts-create-implementation-plan.md" />
+    <None Include=".ai\endpoints\workouts-delete-implementation-plan.md" />
+    <None Include=".ai\endpoints\workout-implementation-plan.md" />
+    <None Include=".ai\endpoints\workouts-history-implementation-plan.md" />
     <None Include=".ai\prd.md" />
     <None Include=".ai\tech-stack.md" />
     <None Include=".github\copilot-instructions.md" />

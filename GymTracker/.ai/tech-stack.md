@@ -8,13 +8,14 @@ Aplikacja Gym Tracker zosta³a stworzona jako prosta aplikacja webowa przy wykorz
 2. Framework webowy:  
    - ASP.NET Core Razor Pages  
      Projekt wykorzystuje podejœcie oparte na Razor Pages, które umo¿liwia efektywne zarz¹dzanie stronami i cieszy siê prostot¹ implementacji, co jest idealne dla naszej aplikacji.
+     **Uwaga:** W tym projekcie nie korzystamy z PageModeli. Zamiast tego preferujemy routing oparty o kontrolery i widoki (MVC), co u³atwia integracjê z istniej¹cymi komponentami oraz utrzymanie spójnoœci w kodzie.
 
 3. Jêzyk programowania:  
    - C#
 
 4. Uwierzytelnianie:  
-   - JWT (JSON Web Tokens)  
-     Aplikacja wykorzystuje mechanizm JWT do rejestracji i logowania u¿ytkowników, zapewniaj¹c dostêp jedynie autoryzowanym u¿ytkownikom.
+   - Cookies  
+     Aplikacja korzysta z mechanizmu Cookie Authentication do logowania i zarz¹dzania sesjami u¿ytkowników, dziêki czemu dostêp maj¹ wy³¹cznie autoryzowani u¿ytkownicy.
 
 5. Dostêp do danych:  
    - Entity Framework Core (EF Core)  
