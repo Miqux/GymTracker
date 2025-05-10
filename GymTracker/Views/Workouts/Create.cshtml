@@ -4,75 +4,94 @@
     var availableExercises = ViewBag.AvailableExercises as List<GymTracker.Data.DTO.ExerciseListDTO>;
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container py-4" style="background-color: #f8f9fa;">
+    <header class="mb-4">
+        <h2 class="fw-bold text-dark border-bottom pb-2" style="border-color: #adb5bd;">
+            @ViewData["Title"]
+        </h2>
+    </header>
 
-<form asp-action="Create" method="post">
-    @Html.AntiForgeryToken()
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-    <div class="form-group">
-        <label asp-for="Date" class="control-label"></label>
-        <input asp-for="Date" type="date" class="form-control" />
-        <span asp-validation-for="Date" class="text-danger"></span>
+                <div class="mb-3">
+                    <label asp-for="Date" class="form-label"></label>
+                    <input asp-for="Date" type="date" class="form-control" />
+                    <span asp-validation-for="Date" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Notes" class="form-label"></label>
+                    <textarea asp-for="Notes" class="form-control"></textarea>
+                    <span asp-validation-for="Notes" class="text-danger"></span>
+                </div>
+
+                <h4 class="mt-4 mb-3">Ćwiczenia</h4>
+                <div class="table-responsive mb-3">
+                    <table class="table table-bordered" id="exercisesTable">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th>Ćwiczenie</th>
+                                <th>Serie</th>
+                                <th>Powtórzenia</th>
+                                <th>Ciężar</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="exerciseRow">
+                                <td>
+                                    <select name="Exercises[0].ExerciseId" class="form-select">
+                                        <option value="">-- Wybierz ćwiczenie --</option>
+                                        @if (availableExercises != null)
+                                        {
+                                            foreach (var exercise in availableExercises)
+                                            {
+                                                <option value="@exercise.Id">@exercise.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" name="Exercises[0].Sets" class="form-control" value="1" min="1" />
+                                </td>
+                                <td>
+                                    <input type="number" name="Exercises[0].Reps" class="form-control" value="1" min="1" />
+                                </td>
+                                <td>
+                                    <input type="number" step="0.1" name="Exercises[0].Weight" class="form-control" />
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger removeRow">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mb-3">
+                    <button type="button" id="addExercise" class="btn btn-secondary">
+                        <i class="bi bi-plus-circle"></i> Dodaj kolejne ćwiczenie
+                    </button>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Zapisz trening</button>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label asp-for="Notes" class="control-label"></label>
-        <textarea asp-for="Notes" class="form-control"></textarea>
-        <span asp-validation-for="Notes" class="text-danger"></span>
-    </div>
-
-    <h4>Ćwiczenia</h4>
-    <table class="table" id="exercisesTable">
-        <thead>
-            <tr>
-                <th>Ćwiczenie</th>
-                <th>Serie</th>
-                <th>Powtórzenia</th>
-                <th>Ciężar</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="exerciseRow">
-                <td>
-                    <select name="Exercises[0].ExerciseId" class="form-control">
-                        <option value="">-- Wybierz ćwiczenie --</option>
-                        @if (availableExercises != null)
-                        {
-                            foreach (var exercise in availableExercises)
-                            {
-                                <option value="@exercise.Id">@exercise.Name</option>
-                            }
-                        }
-                    </select>
-                </td>
-                <td>
-                    <input type="number" name="Exercises[0].Sets" class="form-control" value="1" min="1" />
-                </td>
-                <td>
-                    <input type="number" name="Exercises[0].Reps" class="form-control" value="1" min="1" />
-                </td>
-                <td>
-                    <input type="number" step="0.1" name="Exercises[0].Weight" class="form-control" />
-                </td>
-                <td>
-                    <button type="button" class="btn btn-danger removeRow">Usuń</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <button type="button" id="addExercise" class="btn btn-secondary">Dodaj kolejne ćwiczenie</button>
-
-    <div class="form-group mt-3">
-        <button type="submit" class="btn btn-primary">Zapisz trening</button>
-    </div>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        // Adding new exercise row
+        // Adding new exercise row.
         document.getElementById("addExercise").addEventListener("click", function () {
             var tableBody = document.querySelector("#exercisesTable tbody");
             var rows = tableBody.getElementsByClassName("exerciseRow");
@@ -83,7 +102,13 @@
                 input.setAttribute("name", name.replace(/\[\d+\]/, "[" + index + "]"));
                 if (input.tagName.toLowerCase() === "input") {
                     if (input.type === "number") {
-                        input.value = "1";
+                        // Set default value to 1 for Sets and Reps;
+                        // for Weight leave blank.
+                        if (name.indexOf("Weight") !== -1) {
+                            input.value = "";
+                        } else {
+                            input.value = "1";
+                        }
                     }
                 }
                 if (input.tagName.toLowerCase() === "select") {
@@ -93,9 +118,9 @@
             tableBody.appendChild(newRow);
         });
 
-        // Removing exercise row
+        // Removing an exercise row.
         document.querySelector("#exercisesTable").addEventListener("click", function(e) {
-            if (e.target && e.target.matches("button.removeRow")) {
+            if (e.target && (e.target.matches("button.removeRow") || e.target.closest("button.removeRow"))) {
                 var rows = document.querySelectorAll("#exercisesTable tbody tr.exerciseRow");
                 if (rows.length > 1) {
                     e.target.closest("tr").remove();

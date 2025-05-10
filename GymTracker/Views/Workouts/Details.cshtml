@@ -3,47 +3,64 @@
     ViewData["Title"] = "Szczegóły treningu";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container py-4" style="background-color: #f8f9fa;">
+    <header class="mb-4">
+        <h2 class="fw-bold text-dark border-bottom pb-2" style="border-color: #adb5bd;">
+            @ViewData["Title"]
+        </h2>
+    </header>
 
-<div class="card">
-    <div class="card-header">
-        Trening #@Model.Id - @Model.Date.ToString("yyyy-MM-dd")
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-secondary text-light" style="border-color: #adb5bd;">
+            Trening #@Model.Id - @Model.Date.ToString("yyyy-MM-dd")
+        </div>
+        <div class="card-body">
+            <p>
+                <strong>Notatki:</strong>
+                @Model.Notes
+            </p>
+            <h4 class="mt-4 mb-3 text-dark">Ćwiczenia</h4>
+            @if (Model.Exercises == null || !Model.Exercises.Any())
+            {
+                <div class="alert alert-warning" role="alert">
+                    Brak ćwiczeń w tym treningu.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">Nazwa ćwiczenia</th>
+                                <th scope="col">Serie</th>
+                                <th scope="col">Powtórzenia</th>
+                                <th scope="col">Ciężar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var exercise in Model.Exercises)
+                            {
+                                <tr>
+                                    <td>@exercise.ExerciseName</td>
+                                    <td>@exercise.Sets</td>
+                                    <td>@exercise.Reps</td>
+                                    <td>@(exercise.Weight.HasValue ? exercise.Weight.Value.ToString() : "N/A")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
     </div>
-    <div class="card-body">
-        <p><strong>Notatki:</strong> @Model.Notes</p>
-        <h4>Ćwiczenia:</h4>
-        @if (Model.Exercises == null || !Model.Exercises.Any())
-        {
-            <p>Brak ćwiczeń w tym treningu.</p>
-        }
-        else
-        {
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Nazwa ćwiczenia</th>
-                        <th>Serie</th>
-                        <th>Powtórzenia</th>
-                        <th>Ciężar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var exercise in Model.Exercises)
-                    {
-                        <tr>
-                            <td>@exercise.ExerciseName</td>
-                            <td>@exercise.Sets</td>
-                            <td>@exercise.Reps</td>
-                            <td>@(exercise.Weight.HasValue ? exercise.Weight.Value.ToString() : "N/A")</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-    </div>
-</div>
 
-<div class="mt-3">
-    <a asp-action="History" class="btn btn-secondary">Powrót do historii</a>
-    <a asp-action="Create" class="btn btn-primary">Dodaj trening</a>
+    <div class="d-flex justify-content-between">
+        <a asp-action="History" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Powrót do historii
+        </a>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i> Dodaj trening
+        </a>
+    </div>
 </div>

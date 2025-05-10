@@ -21,6 +21,7 @@
     <None Include=".ai\endpoints\workouts-history-implementation-plan.md" />
     <None Include=".ai\prd.md" />
     <None Include=".ai\tech-stack.md" />
+    <None Include=".ai\ui\ui-rules.md" />
     <None Include=".github\copilot-instructions.md" />
   </ItemGroup>
 

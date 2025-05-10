@@ -1,62 +1,68 @@
 ﻿@model GymTracker.Models.RegisterDto
 @{
     ViewData["Title"] = "Rejestracja";
-    // Odczytanie komunikatów z TempData
+    // Odczytanie komunikatów z TempData.
     var successMessage = TempData["SuccessMessage"] as string;
     var errorMessage = TempData["ErrorMessage"] as string;
-    // Flaga sukcesu – domyślnie false
+    // Flaga sukcesu – domyślnie false.
     bool isSuccess = TempData["IsSuccess"] != null && Convert.ToBoolean(TempData["IsSuccess"]);
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container py-4" style="background-color: #f8f9fa;">
+    <header class="mb-4">
+        <h2 class="fw-bold text-dark border-bottom pb-2" style="border-color: #adb5bd;">
+            @ViewData["Title"]
+        </h2>
+    </header>
 
-@if (!string.IsNullOrEmpty(successMessage) || !string.IsNullOrEmpty(errorMessage))
-{
-    <div id="message-box" class="alert @(isSuccess ? "alert-success" : "alert-danger")" role="alert">
-        <span>@(isSuccess ? successMessage : errorMessage)</span>
-        <button type="button" id="close-message" class="btn btn-sm btn-secondary" style="margin-left:15px;">Zamknij</button>
+    @if (!string.IsNullOrEmpty(successMessage) || !string.IsNullOrEmpty(errorMessage))
+    {
+        <div id="message-box" class="alert @(isSuccess ? "alert-success" : "alert-danger") alert-dismissible fade show" role="alert">
+            <span>@(isSuccess ? successMessage : errorMessage)</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (string.IsNullOrEmpty(errorMessage))
+    {
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form asp-action="Register" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="invalid-feedback d-block"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label"></label>
+                            <input asp-for="Password" type="password" class="form-control" />
+                            <span asp-validation-for="Password" class="invalid-feedback d-block"></span>
+                        </div>
+                        <div class="d-grid mt-3">
+                            <button type="submit" class="btn btn-primary">Zarejestruj się</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-}
-
-@if (string.IsNullOrEmpty(errorMessage))
-{
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-}
-
-<form asp-action="Register" method="post">
-    @Html.AntiForgeryToken()
-
-    <div class="form-group">
-        <label asp-for="Email" class="control-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Password" class="control-label"></label>
-        <input asp-for="Password" class="form-control" type="password" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-
-    <div class="form-group" style="margin-top:15px;">
-        <button type="submit" class="btn btn-primary">Zarejestruj się</button>
-    </div>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var closeButton = document.getElementById("close-message");
-            if (closeButton) {
-                closeButton.addEventListener("click", function() {
-                    // Ukrycie komunikatu
-                    document.getElementById("message-box").style.display = "none";
-                    // Jeżeli rejestracja powiodła się, przekierowanie do strony głównej
-                    var isSuccess = '@isSuccess'.toLowerCase();
-                    if (isSuccess === "true") {
-                        window.location.href = '@Url.Action("Index", "Home")';
-                    }
+        // If the alert is closed and registration was successful, redirect to the Home page.
+        document.addEventListener("DOMContentLoaded", function () {
+            var messageBox = document.getElementById("message-box");
+            if (messageBox && messageBox.classList.contains("alert-success")) {
+                messageBox.addEventListener("closed.bs.alert", function () {
+                    window.location.href = '@Url.Action("Index", "Home")';
                 });
             }
         });

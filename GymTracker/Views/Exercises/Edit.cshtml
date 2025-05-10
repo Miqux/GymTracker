@@ -3,44 +3,53 @@
     ViewData["Title"] = "Edytuj ćwiczenie";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container py-4" style="background-color: #f8f9fa;">
+    <header class="mb-4">
+        <h2 class="fw-bold text-dark border-bottom pb-2" style="border-color: #adb5bd;">
+            @ViewData["Title"]
+        </h2>
+    </header>
 
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Edit" method="post">
-            @Html.AntiForgeryToken()
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <input type="hidden" asp-for="Id" />
 
-            <input type="hidden" asp-for="Id" />
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="invalid-feedback d-block"></span>
+                        </div>
 
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                        <div class="mb-3">
+                            <label asp-for="MuscleGroup" class="form-label"></label>
+                            <input asp-for="MuscleGroup" class="form-control" />
+                            <span asp-validation-for="MuscleGroup" class="invalid-feedback d-block"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="DifficultyLevel" class="form-label"></label>
+                            <input asp-for="DifficultyLevel" class="form-control" />
+                            <span asp-validation-for="DifficultyLevel" class="invalid-feedback d-block"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label"></label>
+                            <textarea asp-for="Description" class="form-control"></textarea>
+                            <span asp-validation-for="Description" class="invalid-feedback d-block"></span>
+                        </div>
+
+                        <div class="d-grid mt-3">
+                            <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label asp-for="MuscleGroup" class="control-label"></label>
-                <input asp-for="MuscleGroup" class="form-control" />
-                <span asp-validation-for="MuscleGroup" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="DifficultyLevel" class="control-label"></label>
-                <input asp-for="DifficultyLevel" class="form-control" />
-                <span asp-validation-for="DifficultyLevel" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mt-3">
-                <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 

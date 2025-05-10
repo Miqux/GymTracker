@@ -3,49 +3,78 @@
     ViewData["Title"] = "Moje Ćwiczenia";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container py-4" style="background-color: #f8f9fa;">
+    <div class="row mb-4">
+        <div class="col">
+            <header class="mb-3">
+                <h2 class="fw-bold text-dark border-bottom pb-2" style="border-color: #adb5bd;">
+                    @ViewData["Title"]
+                </h2>
+            </header>
+        </div>
+    </div>
 
-<div class="mb-3">
-    <a asp-action="Create" class="btn btn-primary">Dodaj nowe ćwiczenie</a>
-</div>
+    <div class="row mb-3">
+        <div class="col">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i> Dodaj nowe ćwiczenie
+            </a>
+        </div>
+    </div>
 
-@if (Model == null || !Model.Any())
-{
-    <div class="alert alert-info">Nie znaleziono ćwiczeń.</div>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Nazwa</th>
-                <th>Grupa mięśniowa</th>
-                <th>Poziom trudności</th>
-                <th>Opis</th>
-                <th>Akcje</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var exercise in Model)
+    <div class="row">
+        <div class="col">
+            @if (Model == null || !Model.Any())
             {
-                <tr>
-                    <td>@exercise.Name</td>
-                    <td>@exercise.MuscleGroup</td>
-                    <td>@exercise.DifficultyLevel</td>
-                    <td>@exercise.Description</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@exercise.Id" class="btn btn-link">Edytuj</a>
-                        <form asp-action="Block" method="post" style="display:inline;">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="id" value="@exercise.Id" />
-                            <button type="submit" class="btn btn-link">Blokuj</button>
-                        </form>
-                    </td>
-                </tr>
+                <div class="alert alert-secondary d-flex align-items-center shadow-sm" role="alert">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <div>Nie znaleziono ćwiczeń.</div>
+                </div>
             }
-        </tbody>
-    </table>
-}
+            else
+            {
+                <div class="table-responsive shadow rounded">
+                    <table class="table table-striped table-hover table-bordered mb-0 text-center">
+                        <thead class="bg-secondary text-light" style="border-color: #adb5bd;">
+                            <tr>
+                                <th>Nazwa</th>
+                                <th>Grupa mięśniowa</th>
+                                <th>Poziom trudności</th>
+                                <th>Opis</th>
+                                <th>Akcje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var exercise in Model)
+                            {
+                                <tr>
+                                    <td style="border-color: #adb5bd;">@exercise.Name</td>
+                                    <td style="border-color: #adb5bd;">@exercise.MuscleGroup</td>
+                                    <td style="border-color: #adb5bd;">@exercise.DifficultyLevel</td>
+                                    <td style="border-color: #adb5bd;">@exercise.Description</td>
+                                    <td style="border-color: #adb5bd;">
+                                        <div class="btn-group" role="group" aria-label="Akcje">
+                                            <a asp-action="Edit" asp-route-id="@exercise.Id" class="btn btn-outline-primary btn-sm">
+                                                <i class="bi bi-pencil-fill me-1"></i> Edytuj
+                                            </a>
+                                            <form asp-action="Block" method="post" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@exercise.Id" />
+                                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                    <i class="bi bi-lock-fill me-1"></i> Blokuj
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

@@ -3,39 +3,78 @@
     ViewData["Title"] = "Historia treningów";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container py-4" style="background-color: #f8f9fa;">
+    <div class="row mb-4">
+        <div class="col">
+            <header class="mb-3">
+                <h2 class="fw-bold text-dark border-bottom pb-2" style="border-color: #adb5bd;">@ViewData["Title"]</h2>
+            </header>
+        </div>
+    </div>
 
-@if (Model == null || !Model.Any())
-{
-    <div class="alert alert-info">Brak treningów do wyświetlenia.</div>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Data</th>
-                <th>Notatki</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var workout in Model)
+    <main class="row">
+        <div class="col">
+            @if (Model == null || !Model.Any())
             {
-                <tr>
-                    <td>@workout.Id</td>
-                    <td>@workout.Date.ToString("yyyy-MM-dd")</td>
-                    <td>@workout.Notes</td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@workout.Id" class="btn btn-info btn-sm">Szczegóły</a>
-                        <form asp-action="Delete" method="post" style="display:inline;" onsubmit="return confirm('Czy naprawdę usunąć trening?');">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="id" value="@workout.Id" />
-                            <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
-                        </form>
-                    </td>
-                </tr>
+                <div class="alert alert-secondary d-flex align-items-center shadow-sm" role="alert">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <div>Brak treningów do wyświetlenia.</div>
+                </div>
             }
-        </tbody>
-    </table>
-}
+            else
+            {
+                <div class="table-responsive shadow rounded">
+                    <table class="table table-striped table-hover table-bordered mb-0 text-center">
+                        <thead class="bg-secondary text-light" style="border-color: #adb5bd;">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Data</th>
+                                <th scope="col">Notatki</th>
+                                <th scope="col">Akcje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var workout in Model)
+                            {
+                                <tr>
+                                    <td style="border-color: #adb5bd;">@workout.Id</td>
+                                    <td style="border-color: #adb5bd;">@workout.Date.ToString("yyyy-MM-dd")</td>
+                                    <td style="border-color: #adb5bd;">
+                                        @if (string.IsNullOrEmpty(workout.Notes))
+                                        {
+                                            <span class="text-muted fst-italic">Brak notatek</span>
+                                        }
+                                        else
+                                        {
+                                            @workout.Notes
+                                        }
+                                    </td>
+                                    <td style="border-color: #adb5bd;">
+                                        <div class="btn-group" role="group" aria-label="Akcje">
+                                            <a asp-action="Details" asp-route-id="@workout.Id" class="btn btn-outline-primary btn-sm">
+                                                <i class="bi bi-eye-fill me-1"></i> Szczegóły
+                                            </a>
+                                            <form asp-action="Delete" method="post" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@workout.Id" />
+                                                <button type="submit" class="btn btn-outline-danger btn-sm ms-1"
+                                                        onclick="return confirm('Czy naprawdę usunąć trening?');">
+                                                    <i class="bi bi-trash-fill me-1"></i> Usuń
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4 text-end">
+                    <a asp-action="Create" class="btn btn-success">
+                        <i class="bi bi-plus-circle-fill me-1"></i> Dodaj nowy trening
+                    </a>
+                </div>
+            }
+        </div>
+    </main>
+</div>
