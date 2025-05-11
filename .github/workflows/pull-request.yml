@@ -2,7 +2,7 @@
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 permissions:
   issues: write
@@ -36,15 +36,3 @@ jobs:
             /p:CollectCoverage=true \
             /p:CoverletOutput=./TestResults/ \
             /p:CoverletOutputFormat=opencover
-
-      - name: Dodanie komentarza statusowego do PR
-        if: ${{ success() }}
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.payload.pull_request.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: "Wszystkie kontrole zakończone sukcesem! 🟢" // Komentarz informujący o sukcesie wszystkich kroków
-            })
