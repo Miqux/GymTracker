@@ -2,7 +2,10 @@
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
+
+permissions:
+  issues: write
 
 jobs:
   build-and-test:
