@@ -9,6 +9,14 @@ GymTracker to aplikacja internetowa umo¿liwiaj¹ca u¿ytkownikom œledzenie postêpó
 - C#
 - (Dodatkowe technologie wed³ug potrzeb projektu)
 
+## Testy
+Projekt zawiera dwa g³ówne rodzaje testów:
+1. **Testy jednostkowe (Unit Tests):**  
+   Testy jednostkowe weryfikuj¹ poprawnoœæ dzia³ania poszczególnych komponentów aplikacji, takich jak logika biznesowa w serwisach (`AccountService`, `ExerciseService`, `WorkoutService`). Do ich implementacji wykorzystano frameworki takie jak MSTest, NUnit lub xUnit oraz narzêdzia do mockowania, np. Moq.
+
+2. **Testy funkcjonalne (E2E - End-to-End):**  
+   Testy E2E symuluj¹ rzeczywiste scenariusze u¿ycia aplikacji z perspektywy u¿ytkownika koñcowego. Przyk³adowe scenariusze obejmuj¹ rejestracjê, logowanie, dodawanie æwiczeñ i treningów oraz przegl¹danie historii. Do ich realizacji mo¿na u¿ywaæ narzêdzi takich jak Selenium WebDriver lub Playwright.
+
 ## Jak rozpocz¹æ pracê lokalnie
 1. **Pobranie repozytorium**  
    Sklonuj projekt za pomoc¹:

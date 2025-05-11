@@ -21,6 +21,7 @@
     <None Include=".ai\endpoints\workouts-history-implementation-plan.md" />
     <None Include=".ai\prd.md" />
     <None Include=".ai\tech-stack.md" />
+    <None Include=".ai\test-plan.md" />
     <None Include=".ai\ui\ui-rules.md" />
     <None Include=".github\copilot-instructions.md" />
   </ItemGroup>
@@ -34,6 +35,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.4" />
+    <PackageReference Include="xunit" Version="2.9.3" />
   </ItemGroup>
 
 </Project>

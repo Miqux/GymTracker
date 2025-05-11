@@ -24,4 +24,10 @@ Aplikacja Gym Tracker zosta³a stworzona jako prosta aplikacja webowa przy wykorz
 6. Baza danych:  
    - Konfiguracja bazy danych (np. SQL Server, SQLite) jest elastyczna i mo¿e byæ dostosowana do potrzeb, wykorzystuj¹c mo¿liwoœci EF Core.
 
+7. Testowanie:  
+   - **Testy jednostkowe:**  
+     Frameworki: xUnit. Do mockowania u¿ywane s¹ narzêdzia takie jak Moq. Testy jednostkowe obejmuj¹ logikê biznesow¹ w serwisach (`AccountService`, `ExerciseService`, `WorkoutService`) oraz metody pomocnicze.
+   - **Testy funkcjonalne (E2E):**  
+     Narzêdzia: Selenium WebDriver, Playwright. Testy E2E weryfikuj¹ pe³ne przep³ywy u¿ytkownika, takie jak rejestracja, logowanie, dodawanie æwiczeñ i treningów oraz przegl¹danie historii.
+
 Ten zestaw technologiczny zapewnia solidn¹, bezpieczn¹ i ³atw¹ w utrzymaniu podstawê dla aplikacji Gym Tracker, umo¿liwiaj¹c jej skalowalnoœæ oraz szybki rozwój.
