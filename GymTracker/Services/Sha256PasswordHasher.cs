@@ -11,7 +11,7 @@ namespace GymTracker.Services.Security
         {
             if (string.IsNullOrEmpty(password))
                 throw new ArgumentException("Password cannot be null or empty", nameof(password));
-                
+
             using (var sha256 = SHA256.Create())
             {
                 var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
@@ -23,10 +23,10 @@ namespace GymTracker.Services.Security
         {
             if (string.IsNullOrEmpty(password))
                 throw new ArgumentException("Password cannot be null or empty", nameof(password));
-                
+
             if (string.IsNullOrEmpty(hashedPassword))
                 throw new ArgumentException("Hashed password cannot be null or empty", nameof(hashedPassword));
-                
+
             var computedHash = HashPassword(password);
             return computedHash.Equals(hashedPassword);
         }
