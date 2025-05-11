@@ -1,0 +1,47 @@
+﻿name: Workflow dla pull-request
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Pobranie repozytorium
+        uses: actions/checkout@v3
+
+      - name: Konfiguracja .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Przywrocenie zaleznosci
+        run: dotnet restore
+
+      - name: Lintowanie kodu
+        run: dotnet format --verify-no-changes
+
+      - name: Budowanie rozwiazania
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Uruchomienie testow jednostkowych z pokryciem
+        run: |
+          dotnet test GymTracker.UnitTest/GymTracker.UnitTest.csproj \
+            --configuration Release --no-build \
+            /p:CollectCoverage=true \
+            /p:CoverletOutput=./TestResults/ \
+            /p:CoverletOutputFormat=opencover
+
+      - name: Dodanie komentarza statusowego do PR
+        if: ${{ success() }}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.payload.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Wszystkie kontrole zakończone sukcesem! 🟢" // Komentarz informujący o sukcesie wszystkich kroków
+            })

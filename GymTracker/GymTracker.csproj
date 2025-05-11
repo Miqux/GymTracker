@@ -24,6 +24,7 @@
     <None Include=".ai\test-plan.md" />
     <None Include=".ai\ui\ui-rules.md" />
     <None Include=".github\copilot-instructions.md" />
+    <None Include=".github\workflows\pull-request.yml" />
   </ItemGroup>
 
   <ItemGroup>
