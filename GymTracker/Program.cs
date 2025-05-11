@@ -1,6 +1,9 @@
 using GymTracker.Data;
 using GymTracker.Middleware;
 using GymTracker.Services;
+using GymTracker.Services.Authentication;
+using GymTracker.Services.Repositories;
+using GymTracker.Services.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -22,6 +25,9 @@ builder.Services.AddDbContext<GymTrackerContext>(options =>
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IExerciseService, ExerciseService>();
 builder.Services.AddScoped<IWorkoutService, WorkoutService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPasswordHasher, Sha256PasswordHasher>();
+builder.Services.AddScoped<IAuthenticationService, CookieAuthenticationService>();
 builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 

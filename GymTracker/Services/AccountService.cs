@@ -1,127 +1,122 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using GymTracker.Data;
 using GymTracker.Models;
-using System.Security.Cryptography;
-using System.Text;
-using GymTracker.Data.Models;
-using GymTracker.Models.Command;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using GymTracker.Models.Command;
 using GymTracker.Models.DTO;
+using GymTracker.Services.Security;
+using GymTracker.Services.Repositories;
+using GymTracker.Services.Authentication;
+using GymTracker.Data.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace GymTracker.Services
 {
     public class AccountService : IAccountService
     {
-        private readonly GymTrackerContext _context;
+        private readonly IUserRepository _userRepository;
         private readonly ILogger<AccountService> _logger;
-        private readonly IConfiguration _configuration;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IPasswordHasher _passwordHasher;
+        private readonly Authentication.IAuthenticationService _authenticationService;
 
-        public AccountService(GymTrackerContext context, ILogger<AccountService> logger, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public AccountService(
+            IUserRepository userRepository,
+            ILogger<AccountService> logger,
+            IPasswordHasher passwordHasher,
+            Authentication.IAuthenticationService authenticationService)
         {
-            _context = context;
-            _logger = logger;
-            _configuration = configuration;
-            _httpContextAccessor = httpContextAccessor;
+            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
+            _authenticationService = authenticationService ?? throw new ArgumentNullException(nameof(authenticationService));
         }
 
         public async Task<RegisterResult> RegisterUserAsync(RegisterUserCommand command)
         {
             try
             {
-                // Sprawdzenie czy u¿ytkownik o podanym adresie email ju¿ istnieje
-                var existingUser = await _context.Users
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(u => u.Email.ToLower() == command.Email.ToLower());
-
-                if (existingUser != null)
+                if (string.IsNullOrWhiteSpace(command.Email) || string.IsNullOrWhiteSpace(command.Password))
                 {
-                    return new RegisterResult
-                    {
-                        Success = false,
-                        ErrorMessage = "U¿ytkownik o podanym adresie email ju¿ istnieje."
-                    };
+                    return CreateFailedRegistration("Email i has³o s¹ wymagane.");
                 }
 
-                // Hashowanie has³a
-                var passwordHash = HashPassword(command.Password);
+                if (await _userRepository.UserExistsByEmailAsync(command.Email))
+                {
+                    return CreateFailedRegistration("U¿ytkownik o podanym adresie email ju¿ istnieje.");
+                }
 
-                // Tworzenie nowego u¿ytkownika i zapis do bazy
-                var newUser = new User
+                var passwordHash = _passwordHasher.HashPassword(command.Password);
+
+                User newUser = new User
                 {
                     Email = command.Email,
                     PasswordHash = passwordHash
                 };
 
-                await _context.Users.AddAsync(newUser);
-                await _context.SaveChangesAsync();
+                await _userRepository.AddUserAsync(newUser);
 
                 return new RegisterResult { Success = true };
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "B³¹d podczas rejestracji u¿ytkownika");
-                return new RegisterResult
-                {
-                    Success = false,
-                    ErrorMessage = "Wyst¹pi³ b³¹d podczas rejestracji."
-                };
+                return CreateFailedRegistration("Wyst¹pi³ b³¹d podczas rejestracji.");
             }
         }
+
         public async Task<LoginResult> LoginUserAsync(LoginCommand command)
         {
             try
             {
-                var user = await _context.Users
-                    .FirstOrDefaultAsync(u => u.Email.ToLower() == command.Email.ToLower());
+                if (string.IsNullOrWhiteSpace(command.Email) || string.IsNullOrWhiteSpace(command.Password))
+                {
+                    return CreateFailedLogin("Email i has³o s¹ wymagane.");
+                }
+
+                var user = await _userRepository.GetUserByEmailAsync(command.Email);
 
                 if (user == null)
                 {
-                    return new LoginResult { Success = false, ErrorMessage = "Nieprawid³owy email lub has³o." };
+                    return CreateFailedLogin("Nieprawid³owy email lub has³o.");
                 }
 
-                var attemptedHash = HashPassword(command.Password);
-                if (user.PasswordHash != attemptedHash)
+                if (!_passwordHasher.VerifyPassword(command.Password, user.PasswordHash))
                 {
-                    return new LoginResult { Success = false, ErrorMessage = "Nieprawid³owy email lub has³o." };
+                    return CreateFailedLogin("Nieprawid³owy email lub has³o.");
                 }
 
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.Email),
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
-                };
-                var identity = new ClaimsIdentity(claims, "login");
-                var principal = new ClaimsPrincipal(identity);
+                await _authenticationService.SignInUserAsync(user);
 
-                // Logowanie u¿ytkownika przy u¿yciu mechanizmu Cookie Authentication
-                await _httpContextAccessor.HttpContext.SignInAsync("Cookies", principal);
-
-                // W tym scenariuszu metoda zwraca true (poprawne logowanie)
                 return new LoginResult { Success = true };
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error during user login");
-                return new LoginResult { Success = false, ErrorMessage = "Wyst¹pi³ b³¹d podczas logowania." };
+                return CreateFailedLogin("Wyst¹pi³ b³¹d podczas logowania.");
             }
         }
 
-        private string HashPassword(string password)
+        private static RegisterResult CreateFailedRegistration(string errorMessage)
         {
-            // Prosty przyk³ad haszowania (w produkcji u¿yj silniejszego mechanizmu)
-            using (var sha256 = SHA256.Create())
+            return new RegisterResult
             {
-                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
-            }
+                Success = false,
+                ErrorMessage = errorMessage
+            };
+        }
+
+        private static LoginResult CreateFailedLogin(string errorMessage)
+        {
+            return new LoginResult
+            {
+                Success = false,
+                ErrorMessage = errorMessage
+            };
         }
     }
 }
